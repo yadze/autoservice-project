@@ -1,0 +1,6 @@
+text
+
+Flask
+psycopg2-binary
+PyJWT
+pytest
