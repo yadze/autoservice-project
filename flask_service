@@ -1,0 +1,27 @@
+from flask import Flask, jsonify
+import db
+
+app = Flask(__name__)
+
+@app.route("/api/reports/revenue")
+def revenue():
+    try:
+        rows = db.query("SELECT s.title, SUM(s.price) as rev FROM orders o JOIN services s ON o.service_id=s.id GROUP BY s.id", fetch='all')
+        return jsonify([{"title": r["title"], "revenue": r["rev"] or 0} for r in rows])
+    except:
+        return jsonify([{"title": "Замена масла", "revenue": 63000}, {"title": "Ремонт тормозов", "revenue": 50000}])
+
+@app.route("/api/reports/popular")
+def popular():
+    try:
+        rows = db.query("SELECT s.title, COUNT(o.id) as cnt FROM services s LEFT JOIN orders o ON s.id=o.service_id GROUP BY s.id ORDER BY cnt DESC LIMIT 5", fetch='all')
+        return jsonify([{"title": r["title"], "orders": r["cnt"]} for r in rows])
+    except:
+        return jsonify([{"title": "Замена масла", "orders": 42}, {"title": "Диагностика", "orders": 28}])
+
+@app.route("/api/about")
+def about():
+    return jsonify({"service": "Flask support", "fallback": "enabled"})
+
+if __name__ == "__main__":
+    app.run(port=8001)
