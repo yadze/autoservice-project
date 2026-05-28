@@ -1,6 +1,0 @@
-{
-  "name": "Автосервис",
-  "version": "0.1.0",
-  "description": "Учёт заказов и автомобилей",
-  "team": ["backend", "frontend"]
-}
