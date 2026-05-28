@@ -1,1 +1,463 @@
 
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Автосервис </title>
+  <link rel="icon" type="image/png" href="https://static.vecteezy.com/system/resources/previews/046/643/505/non_2x/3d-font-letter-a-uppercase-png.png">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Inter', sans-serif; color: #2d2d2d; background-color: #ffffff; line-height: 1.6; scroll-behavior: smooth; }
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+    header { background: #fff; box-shadow: 0 2px 10px rgba(0,0,0,0.05); position: fixed; width: 100%; top: 0; z-index: 1000; }
+    .header-inner { display: flex; justify-content: space-between; align-items: center; padding: 15px 0; }
+    .logo { font-size: 1.5rem; font-weight: 600; letter-spacing: -0.5px; color: #c0392b; text-decoration: none; }
+    nav a, nav .nav-btn { margin-left: 30px; text-decoration: none; color: #555; font-weight: 500; font-size: 0.95rem; background: none; border: none; cursor: pointer; transition: color 0.2s; }
+    nav a:hover, nav .nav-btn:hover { color: #c0392b; }
+    .hero { position: relative; margin-top: 80px; padding: 120px 0 80px; text-align: center; overflow: hidden; background: #fafafa; }
+    .hero-video { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; }
+    .hero-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.45); z-index: 1; }
+    .hero-content { position: relative; z-index: 2; color: #fff; text-shadow: 0 2px 10px rgba(0,0,0,0.3); }
+    .hero h1 { font-size: 3rem; font-weight: 300; letter-spacing: -1px; margin-bottom: 15px; }
+    .hero p { color: rgba(255,255,255,0.9); font-size: 1.25rem; max-width: 600px; margin: 0 auto; }
+    section { padding: 80px 0; }
+    h2 { font-size: 2rem; font-weight: 400; letter-spacing: -0.5px; margin-bottom: 40px; position: relative; display: inline-block; }
+    h2::after { content: ''; position: absolute; bottom: -8px; left: 0; width: 40px; height: 2px; background: #c0392b; }
+    .services-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 25px; }
+    .service-card { background: #f9f9f9; border-radius: 8px; padding: 30px 25px; transition: transform 0.2s, box-shadow 0.2s; border: 1px solid #eee; cursor: pointer; }
+    .service-card:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.05); }
+    .service-card h3 { font-weight: 500; margin-bottom: 10px; font-size: 1.2rem; }
+    .service-card p { color: #666; font-size: 0.95rem; margin-bottom: 15px; }
+    .price { font-size: 1.4rem; font-weight: 600; color: #c0392b; }
+    #service-page { display: none; padding: 100px 20px 80px; min-height: 80vh; background: #fff; }
+    #service-page.active { display: block; }
+    .service-page-inner { max-width: 600px; margin: 0 auto; }
+    .back-link { display: inline-block; margin-bottom: 30px; color: #c0392b; text-decoration: none; font-weight: 500; }
+    .back-link i { margin-right: 6px; }
+    .service-page-title { font-size: 2rem; font-weight: 400; margin-bottom: 10px; }
+    .service-page-price { font-size: 1.6rem; font-weight: 600; color: #c0392b; margin-bottom: 30px; }
+    .service-page-desc { margin-bottom: 25px; color: #555; }
+    .service-page-contacts { background: #f9f9f9; padding: 20px; border-radius: 8px; margin-bottom: 25px; border: 1px solid #eee; }
+    .service-page-contacts p { margin-bottom: 8px; }
+    .btn-back { background: #c0392b; color: #fff; border: none; padding: 12px 25px; border-radius: 6px; font-weight: 500; cursor: pointer; transition: background 0.2s; }
+    .btn-back:hover { background: #a93226; }
+    .works-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 15px; }
+    .work-item { position: relative; overflow: hidden; border-radius: 8px; cursor: pointer; }
+    .work-item img { width: 100%; height: 220px; object-fit: cover; display: block; transition: transform 0.3s; }
+    .work-item:hover img { transform: scale(1.03); }
+    .work-overlay { position: absolute; bottom: 0; background: rgba(0,0,0,0.6); color: #fff; width: 100%; padding: 8px; font-size: 0.9rem; text-align: center; }
+    .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); justify-content: center; align-items: center; }
+    .modal-content { max-width: 90%; max-height: 80vh; border-radius: 4px; object-fit: contain; }
+    .modal .close { position: absolute; top: 20px; right: 35px; color: #f1f1f1; font-size: 40px; font-weight: bold; cursor: pointer; }
+    .reviews-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 25px; }
+    .review-card { background: #f9f9f9; padding: 25px; border-radius: 8px; border: 1px solid #eee; }
+    .review-text { font-style: italic; color: #555; margin-bottom: 15px; }
+    .review-author { font-weight: 600; color: #333; }
+    .stars { color: #f39c12; margin-bottom: 10px; }
+    .addresses-flex { display: flex; flex-wrap: wrap; gap: 30px; }
+    .address-card { flex: 1 1 280px; background: #f9f9f9; padding: 25px; border-radius: 8px; border: 1px solid #eee; }
+    .address-card h3 { font-weight: 500; margin-bottom: 10px; }
+    .schedule-simple { max-width: 550px; }
+    .schedule-row { display: flex; align-items: center; margin-bottom: 18px; }
+    .schedule-day { width: 100px; font-weight: 500; }
+    .schedule-time { width: 120px; font-weight: 500; color: #333; }
+    .schedule-bar { flex: 1; height: 12px; background: #f0f0f0; border-radius: 6px; overflow: hidden; margin-left: 15px; }
+    .schedule-fill { height: 100%; border-radius: 6px; background: #c0392b; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 0.75rem; font-weight: 500; }
+    .schedule-row.closed .schedule-time { visibility: hidden; }
+    .schedule-row.closed .schedule-fill { background: #ccc; color: #666; width: 100% !important; }
+    footer { background: #fafafa; text-align: center; padding: 30px 0; color: #888; font-size: 0.9rem; border-top: 1px solid #eee; }
+    @media (max-width: 768px) { nav a, nav .nav-btn { margin-left: 15px; font-size: 0.85rem; } .hero h1 { font-size: 2rem; } .schedule-row { flex-wrap: wrap; } .schedule-bar { margin-left: 0; margin-top: 6px; width: 100%; } .schedule-day { width: 80px; } .schedule-time { width: 90px; } }
+    .order-item { background: #f9f9f9; padding: 10px; margin-bottom: 8px; border-radius: 6px; display: flex; justify-content: space-between; align-items: center; }
+    .order-item button { background: #c0392b; color: white; border: none; padding: 4px 12px; border-radius: 4px; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container header-inner">
+      <a href="#" class="logo">Автосервис</a>
+      <nav>
+        <a href="#services">Услуги</a>
+        <a href="#works">Работы</a>
+        <a href="#reviews">Отзывы</a>
+        <a href="#addresses">Адреса</a>
+        <a href="#schedule">График</a>
+        <a href="/about" class="nav-btn">О нас</a>
+        <button id="showLoginBtn" class="nav-btn">Вход</button>
+        <button id="showRegisterBtn" class="nav-btn">Регистрация</button>
+        <a href="/profile" class="nav-btn">Профиль</a>
+        <span id="userNameDisplay" style="margin-left:15px; color:#555; font-weight:500;"></span>
+      </nav>
+    </div>
+  </header>
+
+ <main>
+    <div id="main-content">
+      <!-- Hero начало  -->
+      <div class="hero">
+        <img class="hero-video"
+          src="https://media1.tenor.com/m/AI0isC70_coAAAAd/peter-griffin-peter.gif"
+          alt="Автосервис фон">
+          style="object-fit: cover; width: 100%; height: 100%; position: absolute; top: 0; left: 0;">
+        <div class="hero-overlay"></div>
+        <div class="container hero-content">
+          <h1>Забота о вашем автомобиле</h1>
+          <p>Честный сервис, прозрачные цены и качество, которому доверяют</p>
+        </div>
+      </div>
+<!-- секция услуг -->
+      <section id="services">
+        <div class="container">
+          <div style="margin-bottom: 20px;">
+    <input type="text" id="searchInput" placeholder="Поиск по названию услуги..." style="padding:8px; width:250px; border-radius:4px; border:1px solid #ccc;">
+    <button id="searchBtn" style="padding:8px 16px; background:#c0392b; color:white; border:none; border-radius:4px;">Найти</button>
+    <button id="resetSearchBtn" style="padding:8px 16px; background:#555; color:white; border:none; border-radius:4px;">Сброс</button>
+</div>
+          <h2>Услуги и цены</h2>
+          <div class="services-grid" id="servicesGrid">
+            <div style="text-align:center; width:100%;">Загрузка услуг...</div>
+          </div>
+        </div>
+      </section>
+<!-- сеция работ  -->
+      <section id="works" style="background: #fafafa;">
+        <div class="container">
+          <h2>Примеры работ</h2>
+          <div class="works-grid">
+            <div class="work-item" onclick="openImageModal('https://avatars.mds.yandex.net/i?id=32e51325499fd3e47248926925efbfbb2166c18b-5652653-images-thumbs&n=13')">
+              <img src="https://avatars.mds.yandex.net/i?id=32e51325499fd3e47248926925efbfbb2166c18b-5652653-images-thumbs&n=13" alt="Ремонт двигателя">
+              <div class="work-overlay">Ремонт двигателя</div>
+            </div>
+            <div class="work-item" onclick="openImageModal('https://avatars.mds.yandex.net/i?id=613398d303670184cc780b69474fbeaa4c8caa06-4055578-images-thumbs&n=13')">
+              <img src="https://avatars.mds.yandex.net/i?id=613398d303670184cc780b69474fbeaa4c8caa06-4055578-images-thumbs&n=13" alt="Кузовной ремонт">
+              <div class="work-overlay">Кузовной ремонт</div>
+            </div>
+            <div class="work-item" onclick="openImageModal('https://avatars.mds.yandex.net/i?id=6428c04c4a0e3da1d757ef10e5f44ef453685c42-4375317-images-thumbs&n=13')">
+              <img src="https://avatars.mds.yandex.net/i?id=6428c04c4a0e3da1d757ef10e5f44ef453685c42-4375317-images-thumbs&n=13" alt="Ремонт подвески">
+              <div class="work-overlay">Ремонт подвески</div>
+            </div>
+            <div class="work-item" onclick="openImageModal('https://avatars.mds.yandex.net/i?id=61ebda42764e6b554b4506e7c4b22ccb92840eae-12757031-images-thumbs&n=13')">
+              <img src="https://avatars.mds.yandex.net/i?id=61ebda42764e6b554b4506e7c4b22ccb92840eae-12757031-images-thumbs&n=13" alt="Компьютерная диагностика">
+              <div class="work-overlay">Компьютерная диагностика</div>
+            </div>
+          </div>
+        </div>
+      </section>
+<!-- модалка  -->
+      <div id="imageModal" class="modal" onclick="closeImageModal()">
+        <span class="close">&times;</span>
+        <img class="modal-content" id="modalImage" src="">
+      </div>
+<!-- отзывы   -->
+      <section id="reviews">
+        <div class="container">
+          <h2>Отзывы клиентов</h2>
+          <div class="reviews-grid">
+            <div class="review-card">
+              <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+              <p class="review-text">«Быстро поменяли масло, всё объяснили, цены адекватные. Приеду ещё.»</p>
+              <span class="review-author">Алексей, Honda CR-V</span>
+            </div>
+            <div class="review-card">
+              <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i></div>
+              <p class="review-text">«Делал сложный ремонт подвески – ребята знают своё дело, машина как новая.»</p>
+              <span class="review-author">Марина, Kia Rio</span>
+            </div>
+            <div class="review-card">
+              <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+              <p class="review-text">«Прозрачная смета, заранее предупредили о всех работах. Рекомендую.»</p>
+              <span class="review-author">Дмитрий, Toyota Camry</span>
+            </div>
+          </div>
+        </div>
+      </section>
+<!-- адреса -->
+      <section id="addresses" style="background: #fafafa;">
+        <div class="container">
+          <h2>Адреса</h2>
+          <div class="addresses-flex">
+            <div class="address-card"><h3>Центральный сервис</h3><p><i class="fas fa-map-marker-alt"></i> г. Москва, ул. Автомобильная, 15, стр. 2</p><p><i class="fas fa-phone"></i> +7 (495) 123-45-67</p></div>
+            <div class="address-card"><h3>Северный филиал</h3><p><i class="fas fa-map-marker-alt"></i> г. Москва, Дмитровское ш., 87, корп. 3</p><p><i class="fas fa-phone"></i> +7 (495) 765-43-21</p></div>
+          </div>
+        </div>
+      </section>
+<!-- график -->
+      <section id="schedule">
+        <div class="container">
+          <h2>График работы</h2>
+          <div class="schedule-simple">
+            <div class="schedule-row"><span class="schedule-day">Пн – Пт</span><span class="schedule-time">9:00 – 20:00</span><div class="schedule-bar"><div class="schedule-fill" style="width: 70%;"></div></div></div>
+            <div class="schedule-row"><span class="schedule-day">Суббота</span><span class="schedule-time">10:00 – 18:00</span><div class="schedule-bar"><div class="schedule-fill" style="width: 50%;"></div></div></div>
+            <div class="schedule-row closed"><span class="schedule-day">Воскресенье</span><span class="schedule-time">Выходной</span><div class="schedule-bar"><div class="schedule-fill">Выходной</div></div></div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <div id="service-page">
+      <div class="service-page-inner">
+        <a href="#" class="back-link" id="back-to-main"><i class="fas fa-arrow-left"></i> Назад к услугам</a>
+        <h2 class="service-page-title" id="service-title"></h2>
+        <div class="service-page-price" id="service-price"></div>
+        <p class="service-page-desc" id="service-desc"></p>
+        <button id="orderFromServiceBtn" class="btn-back" style="background:#27ae60;">Записаться</button>
+        <div class="service-page-contacts">
+          <p><i class="fas fa-phone"></i> <strong>+7 (495) 123-45-67</strong></p>
+          <p><i class="fas fa-map-marker-alt"></i> г. Москва, ул. Автомобильная, 15, стр. 2</p>
+          <p><i class="fas fa-clock"></i> Пн–Пт 9:00–20:00, Сб 10:00–18:00</p>
+        </div>
+        <button class="btn-back" onclick="goBackToMain()">Назад</button>
+      </div>
+    </div>
+  </main>
+<!-- конец  -->
+  <footer><div class="container">© 2026 Автосервис. Все права защищены.</div></footer>
+
+  <!-- Модалки логина/регистрации -->
+  <div id="loginModal" style="display:none; position:fixed; top:20%; left:50%; transform:translate(-50%,-20%); background:white; padding:25px; border-radius:12px; z-index:2001; box-shadow:0 5px 20px rgba(0,0,0,0.3); width:300px;">
+    <h3>Вход</h3>
+    <input type="text" id="loginUsername" placeholder="Логин" style="width:100%; margin-bottom:10px; padding:8px;"><br>
+    <input type="password" id="loginPassword" placeholder="Пароль" style="width:100%; margin-bottom:15px; padding:8px;"><br>
+    <button id="doLoginBtn" style="background:#c0392b; color:white; border:none; padding:8px 16px; border-radius:6px;">Войти</button>
+    <button id="closeLoginBtn" style="margin-left:10px;">Отмена</button>
+  </div>
+  <div id="registerModal" style="display:none; position:fixed; top:20%; left:50%; transform:translate(-50%,-20%); background:white; padding:25px; border-radius:12px; z-index:2001; box-shadow:0 5px 20px rgba(0,0,0,0.3); width:300px;">
+    <h3>Регистрация</h3>
+    <input type="text" id="regUsername" placeholder="Логин" style="width:100%; margin-bottom:10px; padding:8px;"><br>
+    <input type="password" id="regPassword" placeholder="Пароль" style="width:100%; margin-bottom:15px; padding:8px;"><br>
+    <button id="doRegisterBtn" style="background:#c0392b; color:white; border:none; padding:8px 16px; border-radius:6px;">Зарегистрироваться</button>
+    <button id="closeRegBtn" style="margin-left:10px;">Отмена</button>
+  </div>
+
+  <script>
+    // ---------- API интеграция ----------
+    const API_BASE = "";
+    let accessToken = localStorage.getItem("access_token");
+    let refreshToken = localStorage.getItem("refresh_token");
+
+    async function apiCall(endpoint, options = {}) {
+      const headers = { "Content-Type": "application/json", ...options.headers };
+      if (accessToken) headers["Authorization"] = `Bearer ${accessToken}`;
+      const response = await fetch(API_BASE + endpoint, { ...options, headers });
+      if (response.status === 401 && refreshToken) {
+        const refreshResp = await fetch(API_BASE + "/api/refresh?refresh_token=" + refreshToken, { method: "POST" });
+        if (refreshResp.ok) {
+          const data = await refreshResp.json();
+          accessToken = data.access_token;
+          localStorage.setItem("access_token", accessToken);
+          return apiCall(endpoint, options);
+        } else {
+          // Небольшая функция logout на случай проблем
+          localStorage.clear();
+          location.reload();
+          throw new Error("Session expired");
+        }
+      }
+      return response;
+    }
+
+// Загрузка услуг с поддержкой поиска
+async function loadServices(search = "") {
+    try {
+        let url = `/api/services?limit=20`;
+        if (search) url += `&search=${encodeURIComponent(search)}`;
+        const res = await fetch(url);
+        if (res.ok) {
+            const data = await res.json();
+            const grid = document.getElementById("servicesGrid");
+            if (data.items && data.items.length) {
+                grid.innerHTML = data.items.map(service => `
+                    <div class="service-card" data-id="${service.id}" data-title="${service.title}" data-price="${service.price}" data-desc="${service.description}">
+                        <h3>${service.title}</h3>
+                        <p>${service.description || ''}</p>
+                        <span class="price">${service.price} ₽</span>
+                        <button class="orderBtn" data-id="${service.id}" style="margin-top:10px; background:#c0392b; color:white; border:none; padding:5px 10px; border-radius:4px; cursor:pointer;">Записаться</button>
+                    </div>
+                `).join('');
+                attachOrderButtons();
+                attachServiceCards();
+            } else {
+                grid.innerHTML = '<div>По вашему запросу ничего не найдено</div>';
+            }
+        } else {
+            document.getElementById("servicesGrid").innerHTML = '<div>Ошибка загрузки услуг</div>';
+        }
+    } catch (err) {
+        console.error(err);
+        document.getElementById("servicesGrid").innerHTML = '<div>Ошибка соединения</div>';
+    }
+}
+
+function attachOrderButtons() {
+    document.querySelectorAll('.orderBtn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const serviceId = btn.getAttribute('data-id');
+            createOrder(serviceId);
+        });
+    });
+}
+
+function attachServiceCards() {
+    document.querySelectorAll('.service-card').forEach(card => {
+        card.addEventListener('click', (e) => {
+            if (e.target.classList.contains('orderBtn')) return;
+            const title = card.getAttribute('data-title');
+            const price = card.getAttribute('data-price');
+            const desc = card.getAttribute('data-desc');
+            showServicePage(title, price, desc, card.getAttribute('data-id'));
+        });
+    });
+}
+
+
+
+    let currentServiceId = null;
+    function showServicePage(title, price, desc, id) {
+      document.getElementById('service-title').innerText = title;
+      document.getElementById('service-price').innerText = price + ' ₽';
+      document.getElementById('service-desc').innerText = desc || 'Описание отсутствует';
+      currentServiceId = id;
+      document.getElementById('main-content').style.display = 'none';
+      document.getElementById('service-page').classList.add('active');
+      window.scrollTo(0,0);
+    }
+    function goBackToMain() {
+      document.getElementById('main-content').style.display = 'block';
+      document.getElementById('service-page').classList.remove('active');
+      history.pushState("", document.title, window.location.pathname);
+    }
+    document.getElementById('back-to-main').addEventListener('click', (e) => { e.preventDefault(); goBackToMain(); });
+    document.getElementById('orderFromServiceBtn').addEventListener('click', () => { if (currentServiceId) createOrder(currentServiceId); });
+
+    // Создание заказа
+    async function createOrder(serviceId) {
+      if (!accessToken) { alert("Необходимо зарегистрироваться"); return; }
+      const res = await apiCall(`/api/orders?service_id=${serviceId}`, { method: "POST" });
+      if (res.ok) {
+        alert("Вы записаны на услугу!");
+      } else {
+        const err = await res.json();
+        alert("Ошибка: " + (err.detail || "неизвестная"));
+      }
+    }
+
+    // Авторизация
+    async function login(username, password) {
+      const res = await fetch(API_BASE + "/api/login", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, password })
+      });
+      if (res.ok) {
+        const data = await res.json();
+        accessToken = data.access_token;
+        refreshToken = data.refresh_token;
+        localStorage.setItem("access_token", accessToken);
+        localStorage.setItem("refresh_token", refreshToken);
+        closeModals();
+        await loadUserInfo();
+        return true;
+      } else {
+        alert("Неверный логин или пароль");
+        return false;
+      }
+    }
+
+    async function register(username, password) {
+      const res = await fetch(API_BASE + "/api/register", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, password })
+      });
+      if (res.ok) {
+        alert("Регистрация успешна, теперь войдите");
+        closeModals();
+      } else {
+        alert("Ошибка регистрации (возможно, пользователь уже существует)");
+      }
+    }
+
+    async function loadUserInfo() {
+      if (!accessToken) return;
+      const res = await apiCall("/api/users/me");
+      if (res.ok) {
+        const user = await res.json();
+        const nameSpan = document.getElementById("userNameDisplay");
+        if (nameSpan) nameSpan.innerText = `Привет, ${user.username}`;
+        document.getElementById("showLoginBtn").style.display = "none";
+        document.getElementById("showRegisterBtn").style.display = "none";
+        // для требования /user/{username}
+        const userInfoRes = await apiCall(`/user/${user.username}`);
+        if (userInfoRes.ok) console.log(await userInfoRes.json());
+      } else {
+        document.getElementById("showLoginBtn").style.display = "inline-block";
+        document.getElementById("showRegisterBtn").style.display = "inline-block";
+        if (document.getElementById("userNameDisplay"))
+          document.getElementById("userNameDisplay").innerText = "";
+      }
+    }
+
+    // Модальные окна
+    function showLoginModal() { document.getElementById("loginModal").style.display = "block"; }
+    function showRegisterModal() { document.getElementById("registerModal").style.display = "block"; }
+    function closeModals() {
+      document.getElementById("loginModal").style.display = "none";
+      document.getElementById("registerModal").style.display = "none";
+    }
+    document.getElementById("showLoginBtn").onclick = showLoginModal;
+    document.getElementById("showRegisterBtn").onclick = showRegisterModal;
+    document.getElementById("closeLoginBtn").onclick = closeModals;
+    document.getElementById("closeRegBtn").onclick = closeModals;
+    document.getElementById("doLoginBtn").onclick = () => {
+      const username = document.getElementById("loginUsername").value;
+      const password = document.getElementById("loginPassword").value;
+      login(username, password);
+    };
+    document.getElementById("doRegisterBtn").onclick = () => {
+      const username = document.getElementById("regUsername").value;
+      const password = document.getElementById("regPassword").value;
+      register(username, password);
+    };
+
+    // Работа с галереей и навигацией
+    function openImageModal(imgSrc) {
+      document.getElementById('imageModal').style.display = 'flex';
+      document.getElementById('modalImage').src = imgSrc;
+    }
+    function closeImageModal() { document.getElementById('imageModal').style.display = 'none'; }
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeImageModal(); });
+    // Плавная прокрутка
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function(e) {
+        const href = this.getAttribute('href');
+        if (href === '#services' || href === '#works' || href === '#reviews' || href === '#addresses' || href === '#schedule') {
+          e.preventDefault();
+          const target = document.querySelector(href);
+          if (target && document.getElementById('main-content').style.display !== 'none') {
+            target.scrollIntoView({ behavior: 'smooth' });
+          } else if (target) {
+            goBackToMain();
+            setTimeout(() => target.scrollIntoView({ behavior: 'smooth' }), 100);
+          }
+        }
+      });
+    });
+
+    document.getElementById("searchBtn").onclick = () => {
+    const searchTerm = document.getElementById("searchInput").value.trim();
+    loadServices(searchTerm);
+};
+document.getElementById("resetSearchBtn").onclick = () => {
+    document.getElementById("searchInput").value = "";
+    loadServices("");
+};
+
+    // Инициализация
+    window.addEventListener('load', () => {
+    loadServices("");
+    if (accessToken) loadUserInfo();
+});
+  </script>
+</body>
+</html>
