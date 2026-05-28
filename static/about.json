@@ -1,0 +1,10 @@
+{
+  "name": "AutoService",
+  "version": "1.0.0",
+  "description": "Full-stack приложение для автосервиса",
+  "backend_core": "FastAPI",
+  "backend_supporting": "Flask",
+  "database": "PostgreSQL (Master-Slave)",
+  "frontend": "HTML/CSS/JS + Chart.js",
+  "authors": ["Frontend Developer", "Backend Developer/Database Engineer"]
+}
